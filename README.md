@@ -1,11 +1,11 @@
-#Happy App
+##Happy App
 
-#Lista de afazeres:
+##Lista de afazeres:
 
-#Essenciais:
+##Essenciais:
 1.Confirmação do envio do formulário ao criar um orfanato
 2.Grade de fotos nas informações de um orfanato
 3.Mapa na tela de criar orfanato para selecionar latitude e longitude
 
-#Opcionais:
+##Opcionais:
 1.Animações de interfaces 
