@@ -10,8 +10,7 @@ class Orphanage {
   String opening_hour;
   String open_on_weekends;
 
-  Orphanage(int id, String lat, String lng, String name, String about, String whatsapp,
-  String images, String instructions, String opening_hour, String open_on_weekends,);
+  Orphanage();
 
   Orphanage.fromMap(Map map){
     id = map['id'];
@@ -38,7 +37,7 @@ class Orphanage {
       'opening_hour':opening_hour,
       'open_on_weekends':open_on_weekends
     };
-    if (id != null){
+    if (id != null && id != 0){
       map['id'] = id;
     }
     return map;

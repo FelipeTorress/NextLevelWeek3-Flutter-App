@@ -1,6 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:happy_app/Screens/Orphanages.dart';
+import 'package:happy_app/widgets/DataBase_helper.dart';
 import 'package:happy_app/widgets/Orphanage.dart';
 
 class CreateOrphanage extends StatefulWidget {
@@ -9,28 +10,27 @@ class CreateOrphanage extends StatefulWidget {
 }
 
 class _CreateOrphanageState extends State<CreateOrphanage> {
-  final nomeController = TextEditingController();
-  final sobreController = TextEditingController();
+  final nameController = TextEditingController();
+  final aboutController = TextEditingController();
   final wppController = TextEditingController();
   final fotoController = TextEditingController();
-  final instrucoesController = TextEditingController();
-  final horaController = TextEditingController();
+  final instrucController = TextEditingController();
+  final hourController = TextEditingController();
 
   final _nameFocus = FocusNode();
-  final _sobreFocus = FocusNode();
+  final _aboutFocus = FocusNode();
   final _wppFocus = FocusNode();
   final _fotoFocus = FocusNode();
-  final _instrucoesFocus = FocusNode();
-  final _horaFocus = FocusNode();
+  final _instrucFocus = FocusNode();
+  final _hourFocus = FocusNode();
 
-  final String lat = '-5.0818092';
-  final String lng = '-42.8059741';
+  String lat = '-5.0818092';
+  String lng = '-42.8059741';
 
   bool selected= true;
   bool change = false;
 
   List<String> images = new List();
-  List<Row> fields = List<Row>();
 
   @override
   Widget build(BuildContext context) {
@@ -54,9 +54,9 @@ class _CreateOrphanageState extends State<CreateOrphanage> {
               //mapa
 
               //nome
-              _buildTextField('Nome',nomeController,_nameFocus),
+              _buildTextField('Nome',nameController,_nameFocus),
               //sobre
-              _buildTextField('Sobre',sobreController,_sobreFocus),
+              _buildTextField('Sobre',aboutController,_aboutFocus),
               //número
               _buildTextField('Número(DDD+num)',wppController,_wppFocus),
               //Fotos
@@ -69,9 +69,9 @@ class _CreateOrphanageState extends State<CreateOrphanage> {
               Text('Visitação',textAlign: TextAlign.center, style: TextStyle(color: Colors.indigo[900],fontWeight: FontWeight.bold, fontSize: 25.0),),
               Divider(height: 10.0,thickness: 2.0,color: Colors.indigo[900],),
               //instruções
-              _buildTextField('Instruções',instrucoesController,_instrucoesFocus),
+              _buildTextField('Instruções',instrucController,_instrucFocus),
               //horários de visita
-              _buildTextField('Horário de Visitas',horaController,_horaFocus),
+              _buildTextField('Horário de Visitas',hourController,_hourFocus),
 
               Text('Atende Fim de semana?',textAlign: TextAlign.center,style: TextStyle(fontSize: 20.0),),
               //botão sim e não
@@ -207,6 +207,8 @@ class _CreateOrphanageState extends State<CreateOrphanage> {
               _addImage();
             }else{
               _validateData();
+              //ir para outra pag apagando a pilha de navegação
+              Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context)=>Orphanages()),(Route<dynamic> route) => false);
             }
           },
           child: Text(txt,style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),),
@@ -227,10 +229,10 @@ class _CreateOrphanageState extends State<CreateOrphanage> {
   }
 
   _imagesListView(){
-    if(images.length !=0 && images != null){
+    if(images != null && images.length !=0 ){
       return ListView.builder(
-        shrinkWrap: true,
-        itemCount: images.length,
+          shrinkWrap: true,
+          itemCount: images.length,
           itemBuilder: (BuildContext context, int index) {
             return Row(
               children: [
@@ -291,17 +293,16 @@ class _CreateOrphanageState extends State<CreateOrphanage> {
   }
 
   _validateData(){
-    var controllers = [nomeController.text,sobreController.text,wppController.text,
-      instrucoesController.text,horaController.text,images.toString()];
-    var focus = [_nameFocus,_sobreFocus,_wppFocus,_fotoFocus,_instrucoesFocus,_horaFocus];
-    var data = [lat,lng,selected];
+    var controllers = [nameController.text,aboutController.text,wppController.text,
+      instrucController.text,hourController.text];
+    var focus = [_nameFocus,_aboutFocus,_wppFocus,_fotoFocus,_instrucFocus,_hourFocus];
     int index = -1;
 
-    if(data[0] != '' && data[1] != ''){
+    if(lat != '' && lng != '' && images.toString() != ''){
       controllers.forEach((element) {
         index++;
         if(element != null && element.isNotEmpty){
-          return _sendData(controllers,data);
+          _sendData();
         }else{
           return  FocusScope.of(context).requestFocus(focus[index]);
         }
@@ -309,10 +310,20 @@ class _CreateOrphanageState extends State<CreateOrphanage> {
     }
   }
 
-  _sendData(controlers,selected){
-    Orphanage orp;
-    orp.name=controlers[0];orp.about=controlers[1];orp.whatsapp=controlers[2];
+  _sendData(){
+    Orphanage orp = new Orphanage();
+    orp.lat=lat;
+    orp.lng=lng;
+    orp.name=nameController.text;
+    orp.about=aboutController.text;
+    orp.whatsapp=wppController.text;
+    orp.images=images.toString();
+    orp.instructions=instrucController.text;
+    orp.opening_hour=hourController.text;
+    orp.open_on_weekends=selected?'1':'0';
 
+    DbHelper dbHelper = DbHelper();
 
+    dbHelper.saveOrphanage(orp);
   }
 }

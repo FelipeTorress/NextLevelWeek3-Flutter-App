@@ -18,12 +18,10 @@ class Orphanages extends StatefulWidget {
 class _OrphanagesState extends State<Orphanages> {
   DbHelper dbHelper = DbHelper();
   List<Orphanage> orphanages = List();
-  Orphanage of;
 
   @override
   void initState() {
     super.initState();
-    _salvar();
     _getAllOrphanages();
   }
 
@@ -46,8 +44,8 @@ class _OrphanagesState extends State<Orphanages> {
         ),
         layers: [
           new TileLayerOptions(
-              urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-              subdomains: ['a', 'b', 'c'],
+            urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+            subdomains: ['a', 'b', 'c'],
             tileProvider: CachedNetworkTileProvider(),
           ),
           new MarkerLayerOptions(
@@ -96,25 +94,25 @@ class _OrphanagesState extends State<Orphanages> {
     return showModalBottomSheet(context: context,
         builder: (builder){
           return Scaffold(
-            appBar: AppBar(
-              title: Text(orphanage.name, style: TextStyle(fontFamily: 'GloriaHallelujah')),
-              backgroundColor: Colors.lightBlue,
-              elevation: 0.0,
-              actions: [
-                IconButton(icon: Icon(Icons.add_location_outlined),
-                    onPressed: (){UrlHelper().routeGoogle("https://maps.google.com/mobile?q=${orphanage.lat},${orphanage.lng}&z=15");}
-                ),
-                IconButton(icon: Icon(Icons.call),
-                    onPressed: (){UrlHelper().callNumber(orphanage.whatsapp);}
-                ),
-                IconButton(icon: Image.asset('assets/images/zap.png', fit: BoxFit.fill, width: 25,),
-                    onPressed: (){
-                      UrlHelper().openWhatsApp(orphanage.whatsapp);
-                    }
-                ),
-              ],
-            ),
-            body: _listViewOrphanage(orphanage)
+              appBar: AppBar(
+                title: Text(orphanage.name, style: TextStyle(fontFamily: 'GloriaHallelujah')),
+                backgroundColor: Colors.lightBlue,
+                elevation: 0.0,
+                actions: [
+                  IconButton(icon: Icon(Icons.add_location_outlined),
+                      onPressed: (){UrlHelper().routeGoogle("https://maps.google.com/mobile?q=${orphanage.lat},${orphanage.lng}&z=15");}
+                  ),
+                  IconButton(icon: Icon(Icons.call),
+                      onPressed: (){UrlHelper().callNumber(orphanage.whatsapp);}
+                  ),
+                  IconButton(icon: Image.asset('assets/images/zap.png', fit: BoxFit.fill, width: 25,),
+                      onPressed: (){
+                        UrlHelper().openWhatsApp(orphanage.whatsapp);
+                      }
+                  ),
+                ],
+              ),
+              body: _listViewOrphanage(orphanage)
           );
         }
     );
@@ -122,33 +120,33 @@ class _OrphanagesState extends State<Orphanages> {
 
   _listViewOrphanage(Orphanage orphanage){
     return ListView(
-        children: [
-          MeetNetworkImage(
-            imageUrl: orphanage.images,
-            loadingBuilder: (context) => Center(
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 10.0),
-                child: CircularProgressIndicator(),
-              ),
-            ),
-            errorBuilder: (context, e) => Center(
-              child: Text('Error appear!'),
+      children: [
+        MeetNetworkImage(
+          imageUrl: orphanage.images,
+          loadingBuilder: (context) => Center(
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 10.0),
+              child: CircularProgressIndicator(),
             ),
           ),
-          _createCard('sobre', orphanage.about, Colors.black),
+          errorBuilder: (context, e) => Center(
+            child: Text('Error appear!'),
+          ),
+        ),
+        _createCard('sobre', orphanage.about, Colors.black),
 
-          _createCard('Número', orphanage.whatsapp, Colors.black),
+        _createCard('Número', orphanage.whatsapp, Colors.black),
 
-          _createCard('Intruções', orphanage.instructions, Colors.black),
+        _createCard('Intruções', orphanage.instructions, Colors.black),
 
-          _createCard('Horários', orphanage.opening_hour, Colors.black),
+        _createCard('Horários', orphanage.opening_hour, Colors.black),
 
-          orphanage.open_on_weekends == '1'?
-              _createCard('Aberto fins de semana', 'Abre nos fins de semana', Colors.green)
-              :
-              _createCard('Aberto fins de semana', 'Não abre no fim de semana', Colors.redAccent)
-        ],
-      );
+        orphanage.open_on_weekends == '1'?
+        _createCard('Aberto fins de semana', 'Abre nos fins de semana', Colors.green)
+            :
+        _createCard('Aberto fins de semana', 'Não abre no fim de semana', Colors.redAccent)
+      ],
+    );
   }
 
   _createCard(label, data, color){
@@ -172,14 +170,6 @@ class _OrphanagesState extends State<Orphanages> {
         orphanages=value;
       });
     });
-  }
-
-  void _salvar() async {
-    String img = "https://aventurasnahistoria.uol.com.br/media/_versions/design_sem_nome_73_widelg.jpg";
-    of.lat='-5.0772226';of.lng='-42.8035528';of.name='Shop';of.open_on_weekends='0';
-    of.opening_hour='Todos os dias de 8h as 16h';of.instructions='Venha visitar o Felipe';of.whatsapp='86999021985';
-    of.about='Casa do Felipe Torres';of.images=img;
-    await dbHelper.saveOrphanage(of);
   }
 
   Route _createRoute() {
