@@ -41,8 +41,8 @@ Lembrando que você precisa ter uma conta no [Figma](http://figma.com/) para ace
 Esse projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE.md) para mais detalhes.
 
 ## ✍️ Lista de Afazeres
-1.Confirmação do envio do formulário ao criar um orfanato.
-2.Grade de fotos nas informações de um orfanato.
-3.Mapa na tela de criar orfanato para selecionar localidade.
+1.Confirmação do envio do formulário ao criar um orfanato.<br>
+2.Grade de fotos nas informações de um orfanato.<br>
+3.Mapa na tela de criar orfanato para selecionar localidade.<br>
 
 ---
